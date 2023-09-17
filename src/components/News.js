@@ -15,13 +15,21 @@ export class News extends Component {
     pagesize: PropTypes.number,
     category: PropTypes.string,
   };
-  constructor() {
-    super();
+
+  capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+  constructor(props) {
+    super(props);
     this.state = {
       articles: [],
       loading: false,
       page: 1,
+      totalResults: 0,
     };
+    document.title = `${this.capitalizeFirstLetter(
+      this.props.category
+    )} - NewsMonkey`;
   }
 
   handleNextClick = async () => {
@@ -31,60 +39,53 @@ export class News extends Component {
         Math.ceil(this.state.totalResults / this.props.pagesize)
       )
     ) {
-      let url = `https://newsapi.org/v2/top-headlines?country=${
-        this.props.country
-      }&category=${
-        this.props.category
-      }&apikey=9815f7e5a8ab40ff979f7a1ae83ca470&page=${
-        this.state.page + 1
-      }&pagesize=${this.props.pagesize}`;
-      this.setState({ loading: true });
-      let data = await fetch(url);
-      let parsedData = await data.json();
-
-      this.setState({
-        page: this.state.page + 1,
-        articles: parsedData.articles,
-        loading: false,
+      this.setState({ page: this.state.page + 1 }, () => {
+        this.updatenews();
       });
-    } else {
+
+      console.log(this.state.page);
     }
   };
 
   handlePrevClick = async () => {
-    let url = `https://newsapi.org/v2/top-headlines?country=${
-      this.props.country
-    }&category=${
-      this.props.category
-    }&apikey=9815f7e5a8ab40ff979f7a1ae83ca470&page=${
-      this.state.page - 1
-    }&pagesize=${this.props.pagesize}`;
-    this.setState({ loading: true });
-    let data = await fetch(url);
-    let parsedData = await data.json();
-    this.setState({
-      page: this.state.page - 1,
-      articles: parsedData.articles,
-      loading: false,
-    });
+    if (this.state.page > 1) {
+      this.setState({ page: this.state.page - 1 }, () => {
+        this.updatenews();
+      });
+
+      console.log(this.state.page);
+    }
   };
 
-  async componentDidMount() {
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apikey=9815f7e5a8ab40ff979f7a1ae83ca470&page=1&pagesize=${this.props.pagesize}`;
+  async updatenews() {
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apikey=9815f7e5a8ab40ff979f7a1ae83ca470&page=${this.state.page}&pagesize=${this.props.pagesize}`;
     this.setState({ loading: true });
-    let data = await fetch(url);
-    let parsedData = await data.json();
-    this.setState({
-      articles: parsedData.articles,
-      totalResults: parsedData.totalResults,
-      loading: false,
-    });
+    try {
+      let data = await fetch(url);
+      let parsedData = await data.json();
+      console.log(parsedData);
+      this.setState({
+        articles: parsedData.articles,
+        totalResults: parsedData.totalResults,
+        loading: false,
+      });
+    } catch (error) {
+      console.error("Error fetching news data:", error);
+      this.setState({
+        articles: [],
+        totalResults: 0,
+        loading: false,
+      });
+    }
+  }
+  async componentDidMount() {
+    await this.updatenews();
   }
   render() {
     return (
       <div className="container">
         <h1 className="text-center" style={{ margin: "30px 0" }}>
-          Top Headlines
+          Top {this.capitalizeFirstLetter(this.props.category)} Headlines
         </h1>
         {this.state.loading && <Spinner />}
         <div className="row">
@@ -101,6 +102,9 @@ export class News extends Component {
                     }
                     imageUrl={element.urlToImage}
                     newsUrl={element.url}
+                    author={element.author}
+                    date={element.publishedAt}
+                    source={element.source.name}
                   />
                 </div>
               );
@@ -110,7 +114,7 @@ export class News extends Component {
           <button
             disabled={this.state.page <= 1}
             type="button"
-            className="btn btn-dark"
+            className="btn btn-success"
             onClick={this.handlePrevClick}
           >
             &larr; Previous
@@ -121,7 +125,7 @@ export class News extends Component {
               Math.ceil(this.state.totalResults / this.props.pagesize)
             }
             type="button"
-            className="btn btn-dark"
+            className="btn btn-success"
             onClick={this.handleNextClick}
           >
             Next &rarr;

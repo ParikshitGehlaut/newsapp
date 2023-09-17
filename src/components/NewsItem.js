@@ -1,15 +1,18 @@
 import React, { Component } from "react";
 
 export class NewsItem extends Component {
-  // constructor() {
-  //   super();
-  //   console.log("I am building newsmonkey");
-  // }
   render() {
-    let { title, description, imageUrl, newsUrl } = this.props; // Deconstructing
+    let { title, description, imageUrl, newsUrl, author, date, source } =
+      this.props; // Deconstructing
     return (
       <div className="my-3">
         <div className="card">
+          <span
+            className="position-absolute top-0 translate-middle badge rounded-pill bg-success"
+            style={{ left: "90%", zindex: 1 }}
+          >
+            {source}
+          </span>
           <img
             src={
               !imageUrl
@@ -20,8 +23,14 @@ export class NewsItem extends Component {
             alt="..."
           />
           <div className="card-body">
-            <h5 className="card-title">{title}...</h5>
+            <h5 className="card-title">{title}</h5>
             <p className="card-text">{description}...</p>
+            <p className="card-text">
+              <small className="text-body-secondary">
+                By {author ? author : "Unknown"} on{" "}
+                {date ? new Date(date).toGMTString() : "not known"}
+              </small>
+            </p>
             <a
               href={newsUrl}
               target="_blank"
