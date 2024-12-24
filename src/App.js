@@ -3,7 +3,6 @@ import React, { Component } from "react";
 import Navbar from "./components/Navbar";
 import News from "./components/News";
 import { HashRouter as Router, Routes, Route } from "react-router-dom";
-import LoadingBar from "react-top-loading-bar";
 export default class App extends Component {
   // pagesize = 15;
   state = {
@@ -17,12 +16,6 @@ export default class App extends Component {
       <div>
         <Router>
           <Navbar />
-          <LoadingBar
-            color="#f11946"
-            progress={this.state.progress}
-            height={3}
-          />
-          {/* <News setProgress={this.setProgress} pagesize={this.pagesize} country="in" category="general" /> */}
           <Routes>
             <Route
               exact
@@ -31,7 +24,7 @@ export default class App extends Component {
                 <News
                   setProgress={this.setProgress}
                   pagesize={this.pagesize}
-                  country="in"
+                  country="us"
                   category="general"
                 />
               }
@@ -44,7 +37,7 @@ export default class App extends Component {
                   setProgress={this.setProgress}
                   key="business"
                   pagesize={this.pagesize}
-                  country="in"
+                  country="us"
                   category="business"
                 />
               }
@@ -57,7 +50,7 @@ export default class App extends Component {
                   setProgress={this.setProgress}
                   key="sports"
                   pagesize={this.pagesize}
-                  country="in"
+                  country="us"
                   category="sports"
                 />
               }
@@ -70,7 +63,7 @@ export default class App extends Component {
                   setProgress={this.setProgress}
                   key="technology"
                   pagesize={this.pagesize}
-                  country="in"
+                  country="us"
                   category="technology"
                 />
               }
@@ -83,7 +76,7 @@ export default class App extends Component {
                   setProgress={this.setProgress}
                   key="science"
                   pagesize={this.pagesize}
-                  country="in"
+                  country="us"
                   category="science"
                 />
               }
@@ -96,7 +89,7 @@ export default class App extends Component {
                   setProgress={this.setProgress}
                   key="health"
                   pagesize={this.pagesize}
-                  country="in"
+                  country="us"
                   category="health"
                 />
               }
@@ -109,7 +102,7 @@ export default class App extends Component {
                   setProgress={this.setProgress}
                   key="entertainment"
                   pagesize={this.pagesize}
-                  country="in"
+                  country="us"
                   category="entertainment"
                 />
               }
