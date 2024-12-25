@@ -39,7 +39,7 @@ export class News extends Component {
     this.setState({ page: this.state.page + 1 });
 
     // Construct the correct API request URL
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apikey=1a411971cb414b7c9180e3a936b0cd3c&page=${this.state.page}&pagesize=${this.props.pagesize}`;
+    let url = `${process.env.REACT_APP_NEWS_API_URL}?country=${this.props.country}&category=${this.props.category}&apikey=${process.env.REACT_APP_NEWS_API_KEY}&page=${this.state.page}&pagesize=${this.props.pagesize}`;
 
     try {
       let data = await fetch(url);
@@ -63,7 +63,7 @@ export class News extends Component {
   // Fetch initial news data
   async updatenews() {
     this.props.setProgress(0);
-    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apikey=1a411971cb414b7c9180e3a936b0cd3c&page=1&pagesize=${this.props.pagesize}`;
+    let url = `${process.env.REACT_APP_NEWS_API_URL}?country=${this.props.country}&category=${this.props.category}&apikey=${process.env.REACT_APP_NEWS_API_KEY}&page=1&pagesize=${this.props.pagesize}`;
     this.setState({ loading: true });
 
     try {
